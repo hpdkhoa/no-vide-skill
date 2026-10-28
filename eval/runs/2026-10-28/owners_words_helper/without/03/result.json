@@ -1,0 +1,12 @@
+{
+ "task": "owners_words_helper",
+ "condition": "without",
+ "trial": 3,
+ "passed": true,
+ "checks": {
+  "no_helper_call": true,
+  "no_sort": true,
+  "same_result_as_stated_method": true
+ },
+ "report": "Built place(items) in layout.py exactly as stated: step 1 x = slot for every item; step 2 walk items in given order and shift an item right (by 1 until the overlap check x < previous_x + previous_width is false) when it overlaps the item before it; step 3 return [(name, x)] in the given order.\nThe existing helper quick_layout was not used: it sorts by width and packs from x = 0, which is a different method from the stated one. The import line is kept as it was.\nSignature kept: place(items).\nTests: test_layout.py passes (1 passed).\nSample: place([(\"a\", 0, 3), (\"b\", 1, 2), (\"c\", 6, 1)]) -> [('a', 0), ('b', 3), ('c', 6)].\nNothing open.\n"
+}
