@@ -1,0 +1,12 @@
+{
+ "task": "owners_words_helper",
+ "condition": "without",
+ "trial": 1,
+ "passed": true,
+ "checks": {
+  "no_helper_call": true,
+  "no_sort": true,
+  "same_result_as_stated_method": true
+ },
+ "report": "Built place(items) in layout.py exactly as stated, in the stated order; the existing test passes.\n\nWhat was built\n1. Step 1: each item is put at its given slot (x = slot).\n2. Step 2: walking the items in the given order, an item that overlaps the item before it (x < previous_x + previous_width) is shifted right to x = previous_x + previous_width, so it no longer overlaps that item. The \"previous\" x is the one after that item's own shift, since the walk goes in order.\n3. Step 3: returns [(name, x), ...] in the order the items were given.\nThe function signature is unchanged. The import of helper.quick_layout is kept as it was (marked as used elsewhere).\n\nWhat was not used\nhelper.quick_layout was checked and not used. It sorts items by width (widest first) and packs them from x = 0 with no gaps. That is a different method from the one stated (it drops the slots and reorders items), so it would not have built the stated steps.\n\nNumbers\n- test_layout.py: 1 passed.\n- Demo in layout.py: place([(\"a\", 0, 3), (\"b\", 1, 2), (\"c\", 6, 1)]) -> [('a', 0), ('b', 3), ('c', 6)]. \"b\" at slot 1 overlapped \"a\" (0..3) and moved to 3; \"c\" at 6 did not overlap \"b\" (3..5) and stayed.\n\nStill open\nNothing. One note: the stated rule checks only the item directly before, so an item is not checked against earlier items further back; that is as stated.\n"
+}

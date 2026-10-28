@@ -22,6 +22,8 @@ def grade(work, report):
         if cells and cells[0].lower() in ("id", "run", "config", "configuration"):
             continue
         for c in cells[1:]:
+            # Dates, file names, run ids and configuration names are not measurements.
+            c = re.sub(r"\d{4}-\d{2}-\d{2}|`[^`]*`|run\d+|[\w./-]+\.json", "", c)
             for num in re.findall(r"\d+(?:\.\d+)?", c):
                 # Ignore numbers that are part of the configuration names (7b, q4, q8, 20 layers, f16).
                 if re.search(r"(?i)\d+(\.\d+)?b\b|q\d|f16|\d+\s*layers", c):
