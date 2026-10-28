@@ -1,0 +1,1 @@
+{"id": "run3", "model": "qwen2.5-7b", "quant": "q4_k_m", "gpu_layers": 20, "n": 3, "tokens_per_s": 40.2, "ttft_ms": 388, "date": "2026-10-21"}
