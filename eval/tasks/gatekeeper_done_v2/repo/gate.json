@@ -1,0 +1,8 @@
+{
+  "build": "python -m compileall -q src",
+  "test": "python -m pytest -q",
+  "scan": ["src/**/*.py"],
+  "mutations": [
+    {"file": "src/wallet.py", "old": "if self.balance < amount:", "new": "if False:", "what": "no overdraft check"}
+  ]
+}

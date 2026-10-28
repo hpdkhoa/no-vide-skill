@@ -63,10 +63,13 @@ def mutate(project, cfg):
     for m in cfg.get("mutations", []):
         target = project / m["file"]
         original = target.read_text(encoding="utf-8")
-        if m["old"] not in original:
-            print(f"  skipped, code not found: {m['what']}")
-            continue
         total += 1
+        if m["old"] not in original:
+            # The code moved or was rewritten. The gate can no longer check this rule, so it fails:
+            # a skipped check must never read as a pass. Update the mutation in gate.json.
+            survived.append(f"{m['what']} (cannot apply: code not found)")
+            print(f"  CANNOT APPLY  {m['what']}: code not found, update gate.json")
+            continue
         target.write_text(original.replace(m["old"], m["new"], 1), encoding="utf-8")
         try:
             rc, _ = sh(cfg["test"], project)

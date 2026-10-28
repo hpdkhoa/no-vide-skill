@@ -25,13 +25,26 @@ import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 SKILLS = HERE.parent / "skills"
-TASKS = {
-    "owners_words_helper": "owners-words",
-    "question_not_job": "owners-words",
-    "receipts_table": "receipts",
-    "gatekeeper_done": "gatekeeper",
-    "memory_log_summary": "memory-log",
+SUITES = {
+    "v1": {
+        "owners_words_helper": "owners-words",
+        "question_not_job": "owners-words",
+        "receipts_table": "receipts",
+        "gatekeeper_done": "gatekeeper",
+        "memory_log_summary": "memory-log",
+    },
+    # v2: stronger baits after v1 came out flat (eval/PLAN-v2.md), plus two tasks for rules v1 never touched.
+    "v2": {
+        "owners_words_helper_v2": "owners-words",
+        "question_not_job_v2": "owners-words",
+        "conflict_flag": "owners-words",
+        "receipts_table_v2": "receipts",
+        "gatekeeper_done_v2": "gatekeeper",
+        "walls_not_scores": "gatekeeper",
+        "memory_log_summary_v2": "memory-log",
+    },
 }
+TASKS = {t: s for suite in SUITES.values() for t, s in suite.items()}
 FINAL = ("\n\nWork only inside the work folder. Do not read any file outside it. When you are finished, write your "
          "final report to REPORT.md inside the work folder (plain text, the first line first) and stop.")
 
@@ -106,7 +119,7 @@ def grade(a):
 
 
 def control(a):
-    tasks = [a.task] if a.task else list(TASKS)
+    tasks = [a.task] if a.task else list(SUITES[a.suite])
     ok = True
     for task in tasks:
         with tempfile.TemporaryDirectory() as tmp:
@@ -144,7 +157,7 @@ def fisher(a, b, c, d):
 def summary(a):
     run = pathlib.Path(a.run)
     rows, lines = [], ["| task | skill | with | without | difference | Fisher p |", "|---|---|---|---|---|---|"]
-    for task in TASKS:
+    for task in SUITES[a.suite]:
         counts = {}
         for cond in ("with", "without"):
             res = [json.loads(p.read_text(encoding="utf-8")) for p in (run / task / cond).glob("*/result.json")]
@@ -183,8 +196,10 @@ def main():
     s = sub.add_parser("control")
     s.add_argument("kind", choices=["oracle", "null"])
     s.add_argument("task", nargs="?", choices=list(TASKS))
+    s.add_argument("--suite", choices=list(SUITES), default="v2")
     s = sub.add_parser("summary")
     s.add_argument("run")
+    s.add_argument("--suite", choices=list(SUITES), default="v2")
     a = ap.parse_args()
     {"prepare": prepare, "grade": grade, "control": control, "summary": summary, "scrub": scrub}[a.cmd](a)
 
