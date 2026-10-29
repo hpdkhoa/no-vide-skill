@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {"hooks": [{"type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.novibes/nv.py\" capture"}]}
+    ],
+    "Stop": [
+      {"hooks": [{"type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.novibes/nv.py\" stop"}]}
+    ],
+    "PreCompact": [
+      {"hooks": [{"type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.novibes/nv.py\" precompact"}]}
+    ],
+    "SessionStart": [
+      {"matcher": "compact", "hooks": [{"type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.novibes/nv.py\" restore"}]}
+    ]
+  }
+}
