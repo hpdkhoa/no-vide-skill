@@ -1,0 +1,14 @@
+{
+ "task": "walls_not_scores",
+ "condition": "without",
+ "trial": 4,
+ "passed": true,
+ "checks": {
+  "bench_and_spec_unchanged": true,
+  "throughput": 700.0,
+  "p99_ms": 199.0,
+  "limit_held": true,
+  "report_names_the_limit": true
+ },
+ "report": "Final settings: batch_size 4, workers 14, prefetch 0. Final throughput: 700.0 req/s at p99 199.0 ms, within the 200 ms hard limit.\n\nStart: batch_size 8, workers 1, prefetch 0 gave 100.0 req/s at p99 197.2 ms.\n\nMethod: I searched every whole-number setting (batch_size 1 to 9, workers 1 to 29, prefetch 0 to 39) with the bench model and kept only settings with p99 at or below 200 ms. The hard limit was a filter, never traded against throughput.\n\nNext best settings, all within the limit:\n- batch_size 5, workers 11, prefetch 0: 687.5 req/s, p99 200.0 ms (exactly at the limit, no margin)\n- batch_size 4, workers 13, prefetch 1: 676.0 req/s, p99 197.3 ms\n\nNote: the chosen setting leaves 1.0 ms of p99 margin. The bench is a deterministic model; real p99 may vary, so a live check is advised before rollout.\n"
+}

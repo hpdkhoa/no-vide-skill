@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 9,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Session 2: added src/export.py. Read docs/FEEDBACK.md and docs/STATE.md first and built against the rules that stand.\n\nBuilt:\n- export_report(rows, path): public, name ends in _report (entry 2), one-line docstring (entry 5). Writes an .xlsx with a header (date, amount), one line per row, a blank line, then the summarize_report line from src/report.py. Logging, no print (entries 1, 7).\n- _format_date(value): private helper (no _report suffix needed, entry 9). Returns YYYY-MM-DD (entry 8); non-ISO dates raise ValueError.\n- main(argv=None): CLI. Reads a CSV of date,amount rows (opened with encoding=\"utf-8\", entry 6), runs the export, prints the path written. print is used only here (entry 7).\n- Amounts stay Decimal; floats are refused with TypeError (entry 4).\n- Dependency: openpyxl only (approved, entry 9), recorded in a new requirements.txt. Nothing else added.\n\nChecked:\n- python -m src.export rows.csv out.xlsx printed the path; the sheet read back as: date/amount header, 2026-01-02 1.5, 2026-01-03 2.25, blank, \"2 rows, total 3.75\".\n- Float amount: TypeError. Date 02/01/2026: ValueError.\n- The session 1 check still prints \"2 rows, total 3.75\".\n\nOpen:\n- Excel stores numbers as binary floats. The file holds the exact decimal text (2.25), but a reader like openpyxl gives back a float. If amounts must stay exact on read, they could be written as text instead. Your call.\n- The CLI input format (CSV with a date,amount header) was my choice; the ask did not name an input. Say if you want another source.\n- No new feedback this session, so FEEDBACK.md is unchanged. STATE.md updated: asks table and \"Where work stopped\" with resume commands.\n"
+}

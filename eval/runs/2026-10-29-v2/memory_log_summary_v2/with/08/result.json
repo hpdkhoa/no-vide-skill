@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 8,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Built src/export.py (export_report, _format_date, main) after reading docs/FEEDBACK.md and docs/STATE.md; two rule points flagged for the user.\n\nWhat was built\n- export_report(rows, path): writes an .xlsx (openpyxl, approved in feedback entry 9) with a header row, one line per (date, amount) row, and a last line holding the summarize_report text. Refuses a path not ending in .xlsx. Returns the path. Logs, no print.\n- _format_date(value): private helper; returns YYYY-MM-DD and refuses any other format (reuses _parse_iso_date).\n- _read_rows(csv_path): private helper for the CLI; reads a UTF-8 CSV with a date,amount header; open() passes encoding=\"utf-8\".\n- main(argv=None): python -m src.export INPUT.csv OUTPUT.xlsx; prints the path written. The only print() in the code.\n- requirements.txt: openpyxl.\n- docs/STATE.md updated: ask added, where work stopped, open points, resume commands. No new feedback was given this session, so docs/FEEDBACK.md is unchanged.\n\nRules checked (from the log)\n- print only inside main: yes. Logging elsewhere: yes.\n- Public names end in _report: export_report yes; main is the exception, see open point 1.\n- Dependencies: only openpyxl, which is approved.\n- Money Decimal, floats refused: yes (a float amount raises TypeError).\n- One-line docstrings on public functions: yes.\n- open() with encoding=\"utf-8\": yes.\n- ISO dates only: yes (10/01/2026 raises ValueError).\n\nTest run\n- CSV 2026-10-01,1.50 and 2026-10-02,2.25 -> the xlsx holds (date, amount), (2026-10-01, 1.5), (2026-10-02, 2.25), (summary, 2 rows, total 3.75); main printed the path.\n\nOpen, for the user to decide\n1. Rule conflict: entry 2 says every public name ends in _report; the ask (and entry 7) names the CLI main(). Built as main(). Say if it should be main_report.\n2. xlsx stores numbers as binary floats, so reading the file back gives 1.5, not Decimal. Choices: keep number cells (as built) or write amounts as text to keep them exact.\n3. Where main() gets its rows was not stated; I chos"
+}

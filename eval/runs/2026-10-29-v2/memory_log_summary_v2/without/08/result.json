@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 8,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Added src/export.py, following the rules in docs/RULES.md.\n\nWhat is in it:\n- export_report(rows, path): the public function. It writes a header row, the (date, amount) rows, and the summarize_report summary line to an .xlsx file, then returns the path. The name ends with _report (rule 2) and it has a one-line docstring (rule 5).\n- _format_date(value): the private helper. It returns the date as ISO YYYY-MM-DD (rule 7). Being private, it needs no _report suffix (rule 2 as corrected).\n- _read_rows(csv_path): a small private helper for the CLI. It reads a date,amount CSV and opens the file with encoding=\"utf-8\" (rule 6).\n- main(argv=None): the CLI. Usage: python -m src.export input.csv output.xlsx. It prints the path it wrote; print is used only in main (rule 1 as corrected), and logging is used everywhere else.\n\nRules followed:\n- The only dependency is openpyxl, which the owner approved (rule 3). Everything else comes from the standard library.\n- Amounts go through report._parse_amount, so they stay Decimal and floats are refused (rule 4). Amounts are written as Decimal values.\n\nTest run: a 2-row CSV gave rows 2026-10-01 / 12.50 and 2026-10-02 / 7 in out.xlsx, with the summary \"2 rows, total 19.50\". Read back with openpyxl, the file showed the expected cells.\n\nOpen points:\n- The CLI's name is main, which does not end with _report. The task asked for main() by name, so I kept it.\n- export.py imports the private helpers _parse_date and _parse_amount from report.py so the date and amount checks are shared.\n- I wrote no unit test file.\n"
+}

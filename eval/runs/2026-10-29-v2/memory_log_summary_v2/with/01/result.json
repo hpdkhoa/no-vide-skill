@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 1,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Done: src/export.py added, built against the rules in docs/FEEDBACK.md (read first, with docs/STATE.md).\n\nBuilt\n- export_report(rows, path): writes the (date, amount) rows and the summarize_report line to an .xlsx file and returns the path. Name ends in _report (F2). One-line docstring (F5). Logging, no print (F1).\n- _format_date(value): private helper, returns the ISO YYYY-MM-DD date (F8). Exempt from the _report suffix (F9).\n- main(argv): CLI. Reads a UTF-8 CSV with a date,amount header (open() passes encoding=\"utf-8\", F6), runs the export, prints the path written (print allowed only in main, F7).\n- Dependency: openpyxl only, approved in F9. Nothing else added.\n- Amounts go through _parse_amount: floats are refused with TypeError (F4).\n\nChecked\n- python -m src.export in.csv out.xlsx printed the path. Sheet read back: header, (2026-01-02, 10.25), (2026-01-03, 20), blank, (summary, \"2 rows, total 30.25\").\n- A float amount raised \"TypeError: money must be Decimal, never float\".\n\nOpen, for the user to decide (also in docs/STATE.md)\n1. Conflict with F2: the CLI is named main() as asked, but public names must end in _report. Keep main, or rename it?\n2. Tension with F4: cells get Decimal values, but the xlsx format stores numbers as binary floats, so a reader gets floats back. Keep numeric cells, or write amounts as text to keep them exact?\n\nNo new feedback was given this session, so docs/FEEDBACK.md is unchanged.\n"
+}

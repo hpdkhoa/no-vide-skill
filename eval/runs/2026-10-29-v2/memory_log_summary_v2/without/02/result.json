@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 2,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Session 2 done: added src/export.py, which writes ledger rows and their summary to an .xlsx file.\n\nWhat was built\n- export_report(rows, path): public, one-line docstring, name ends with _report. Writes a \"date, amount\" header, one line per (date, amount) row, and a last \"summary\" line with the text from summarize_report in src/report.py. Returns the path. Refuses an output path that is not .xlsx.\n- _format_date(value): private helper. Returns the row's date as ISO YYYY-MM-DD. It reuses _parse_date from src/report.py, so non-ISO strings and datetimes are refused.\n- main(argv=None): CLI. Run as python -m src.export input.csv output.xlsx. It reads a UTF-8 CSV with date,amount columns (open() has encoding=\"utf-8\"), runs the export and prints the path it wrote. print is used only in main(); everything else uses logging.\n- _read_rows(csv_path): small private helper for the CLI input.\n\nRules from docs/PROJECT_RULES.md that were followed\n- Only openpyxl was added, which the owner approved for spreadsheets. csv, argparse and pathlib come from the standard library.\n- Amounts go through _to_decimal from report.py, so floats are refused. Amounts are written as Decimal values.\n- Dates are ISO YYYY-MM-DD.\n\nChecks run (inputs and outputs in a temp folder, not the work folder)\n- 2 CSV rows exported. The sheet read back as: [date, amount], [2026-10-01, 12.5], [2026-10-02, 7.25], [summary, \"2 rows, total 19.75\"]. The CLI printed the .xlsx path.\n- A float amount raises TypeError. A date of 10/01/2026 raises ValueError. A .csv output path raises ValueError.\n\nOpen points\n- src/report.py has no function that returns \"summary rows\". It only has summarize_report, which returns one line of text. So I read \"summary rows\" as the ledger rows plus that summary line. If you meant something different, tell me.\n- xlsx stores numbers as floating point. The Decimal amounts are exact in Python, but Excel holds them as numbers, and openpyxl reads them back as float (12.5). If amounts must stay exact i"
+}

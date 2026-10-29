@@ -1,0 +1,22 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 7,
+ "passed": false,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": false,
+  "no_docstring": [
+   "main"
+  ],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Session 2 done: src/export.py added, checked by one CSV-to-xlsx run.\n\nBuilt\n- src/export.py\n  - export_report(rows, path): public, ends with _report, one-line docstring. Writes a \"date, amount\" header, one row per (date, amount), a blank row, then \"summary\" with the summarize_report line. Refuses a path that does not end in .xlsx. Logs with logging, no print.\n  - _format_date(value): private helper, returns the ISO YYYY-MM-DD string (reuses report._parse_iso_date).\n  - main(argv=None): CLI. Reads a UTF-8 CSV (header row, then date,amount), runs export_report, prints the written path (print allowed in main, rule 7).\n  - Run: python -m src.export input.csv output.xlsx\n- requirements.txt: openpyxl==3.1.5 (owner pre-approved openpyxl for spreadsheets, rule 9). No other dependency.\n- docs/RULES.md: State section updated (export.py, openpyxl now added).\n\nRules checked\n- Money Decimal, never float: amounts go through report._to_decimal (a float raises TypeError). They are written as text cells such as \"12.50\", because an xlsx number cell is a float. Open point: if you want number cells in the sheet, say so; that trades exactness for spreadsheet math.\n- Dates ISO: yes. UTF-8: the CSV open() states encoding=\"utf-8\"; the xlsx is binary, written by openpyxl.\n\nMeasured\n- Test run on a 2-row CSV gave: [date, amount], [2026-10-01, 12.50], [2026-10-02, 7.25], blank, [summary, \"2 rows, total 19.75\"]. The path printed.\n\nNot done\n- No test file added (none asked). Nothing committed.\n"
+}

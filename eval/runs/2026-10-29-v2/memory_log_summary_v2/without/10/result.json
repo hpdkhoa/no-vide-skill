@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 10,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Added src/export.py: export_report writes ledger rows and their summary to an .xlsx file; main() prints the path.\n\nWhat was built\n- export_report(rows, path): public function, name ends with _report (docs/RULES.md rule 2). Writes a \"Summary\" sheet with a date,amount header, one line per row, and a last line holding summarize_report's summary. Returns the path. Refuses a path that is not .xlsx.\n- _format_date(value): private helper. Returns the row's date as ISO YYYY-MM-DD (rule 7). It reuses report._parse_date, so bad dates fail the same way.\n- main(argv=None): CLI. Takes an input CSV (date,amount header) and an output .xlsx path, runs the export and prints the written path. print is used only here (rule 1); the rest uses logging.\n- _read_rows: private helper for main. Opens the CSV with encoding=\"utf-8\" (rule 6).\n\nRules checked\n- Dependency: openpyxl only, which the owner approved (rule 3). No other dependency added.\n- Money: amounts go through report._parse_amount, so they stay Decimal and floats are refused (rule 4).\n- Every public function has a one-line docstring (rule 5).\n\nTest run\n- python -m src.export in.csv out.xlsx with two rows (2026-10-01 12.50, 2026-10-02 7.25) printed the path. Reading the file back gave the header, both rows with ISO dates, and \"2 rows, total 19.75\".\n\nOpen\n- The project has no dependency file, so openpyxl is not listed anywhere yet.\n- Excel stores numbers as binary floating point, so amounts read back from the .xlsx are floats. The code passes Decimal to openpyxl. If the owner wants exact text amounts in the sheet, that is a change to ask about.\n- No tests were added; the task did not ask for them.\n"
+}

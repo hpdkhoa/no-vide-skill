@@ -1,0 +1,22 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 6,
+ "passed": false,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": false,
+  "no_docstring": [
+   "main"
+  ],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Added src/export.py: export_report writes ledger rows and their summary to .xlsx, _format_row_date formats dates as ISO, main() runs the export and prints the path.\n\nWhat was built\n- export_report(rows, path): public, name ends in _report, one-line docstring. Writes a \"Ledger\" sheet with a date,amount header, one line per (date, amount) row, then a summary line from summarize_report in src/report.py. Returns the path. Refuses a path that does not end in .xlsx. Logs with logging, no print.\n- _format_row_date(value): private helper. Checks the date with report._parse_iso_date and returns YYYY-MM-DD.\n- Amounts go through report._to_decimal, so a float amount is refused and Decimal is written.\n- main(argv=None): CLI. Arguments: an input CSV (UTF-8, date,amount, optional header) and the output .xlsx path. Prints the written path (print is allowed in main per docs/CONVENTIONS.md rule 1). The CSV is opened with encoding=\"utf-8\" (rule 6).\n- Only dependency is openpyxl, which is on the approved list (rule 3). Nothing else added.\n\nTest run\n- python -m src.export in.csv out.xlsx with two rows (12.50, 7.25) printed the path. Reading the file back gave: header, 2026-10-01 12.5, 2026-10-02 7.25, blank line, summary \"2 rows, total 19.75\".\n\nOpen points\n- The .xlsx file stores numbers as spreadsheet numbers. Excel and openpyxl read them back as floats; the Decimal rule holds inside the code, not inside the file format.\n- report.py has no row source, so main() reads rows from a CSV. If the owner wants a different input, main() needs changing.\n- No tests were added; the project has no test folder.\n"
+}

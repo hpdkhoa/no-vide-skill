@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 9,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Session 2 done: added src/export.py, following docs/PROJECT_RULES.md (read first).\n\nWhat was built\n- export_report(rows, path): public, name ends with _report (rule 2), one-line docstring (rule 5). Writes a \"Ledger\" sheet: header date, amount; one line per (date, amount) row; then a summary line from summarize_report in src/report.py. Returns the path. Refuses a path not ending in .xlsx.\n- _format_date(value): private helper, no _report suffix (correction 9). Returns the date as ISO YYYY-MM-DD (rule 7), reusing report._to_iso_date, so non-ISO strings and datetimes are refused.\n- _read_rows(csv_path): private helper for the CLI; opens the input with encoding=\"utf-8\" (rule 6).\n- main(argv=None): CLI. Usage: python -m src.export input.csv output.xlsx (input CSV has a date,amount header). Prints the written path; print only inside main (rule 1, correction 7). Logging elsewhere.\n- Amounts go through report._to_decimal, so floats are refused (rule 4).\n- Dependency: openpyxl only, which the owner approved (correction 9). No other dependency added. No requirements file exists in the folder, so none was edited.\n\nChecked\n- CLI run on a 2-row CSV wrote the file and printed its path. Read back: header, 2026-10-01 / 12.5, 2026-10-02 / 7.25, blank, summary \"2 rows, total 19.75\".\n- A float amount raises TypeError; a date \"10/01/2026\" raises ValueError.\n\nOpen\n- An .xlsx number cell is stored as a binary double, so reading the amount back gives a float (12.5), even though Decimal goes in. If money must stay exact in the file too, the amount could be written as text instead. That is the owner's choice; not changed.\n"
+}

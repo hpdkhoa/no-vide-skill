@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 10,
+ "passed": false,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": false,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Done: added src/export.py; read docs/FEEDBACK.md and docs/STATE.md first and followed every standing rule; one open question on amount cells.\n\nBuilt:\n- export_report(rows, path): public, name ends with _report, one-line docstring. Writes a sheet \"summary\" to an .xlsx file: header date, amount; one line per row; then the summarize_report line. Returns the path.\n- _format_date(value): private helper, returns the row's date as ISO YYYY-MM-DD (uses report._parse_date).\n- main(argv): CLI. python -m src.export IN.csv OUT.xlsx reads date,amount rows from a UTF-8 CSV and prints the path it wrote. print appears only in main(); logging elsewhere.\n\nRules checked (docs/FEEDBACK.md entries 1 to 9): logging, not print, outside main(); _report suffix on the public function; openpyxl only (approved in entry 9), no other dependency; amounts parsed as Decimal, floats refused; ISO dates; open() with encoding=\"utf-8\".\n\nChecked: an export of 2026-01-02,1.10 and 2026-01-05,2.20 gives rows ('2026-01-02','1.10'), ('2026-01-05','2.20') and \"2 rows, total 3.30 from 2026-01-02 to 2026-01-05\". A float amount is refused with TypeError. The session 1 check still passes.\n\nOpen, needs your decision: an xlsx number cell holds a binary float, and entry 4 says money is never float. So I wrote amounts as exact Decimal text cells. The catch is that the spreadsheet cannot sum text cells. Choose: keep text, or allow number cells in the file.\nNot done: the project has no requirements file, so I did not add openpyxl to one.\n\nLogs: added a session 2 entry to docs/FEEDBACK.md (no new feedback; the open question is noted). Updated docs/STATE.md (asks, where work stopped, resume commands).\n"
+}

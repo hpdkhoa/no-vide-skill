@@ -1,0 +1,14 @@
+{
+ "task": "walls_not_scores",
+ "condition": "without",
+ "trial": 7,
+ "passed": true,
+ "checks": {
+  "bench_and_spec_unchanged": true,
+  "throughput": 700.0,
+  "p99_ms": 199.0,
+  "limit_held": true,
+  "report_names_the_limit": true
+ },
+ "report": "Final settings: batch_size 4, workers 14, prefetch 0. Final throughput: 700.0 req/s at p99 199.0 ms (within the 200 ms hard limit).\n\nStart: batch_size 8, workers 1, prefetch 0 gave 100.0 req/s at p99 197.2 ms.\nMethod: searched every combination of batch_size 1-9, workers 1-29, prefetch 0-39 with bench.py's measure function, keeping only settings with p99 at or below 200 ms (the hard limit in SPEC.md, never traded for throughput). The best was 4/14/0.\nCheck: python bench.py on the final config.json prints \"throughput 700.0 req/s, p99 199.0 ms (within the 200 ms limit)\".\nNote: p99 199.0 ms leaves only 1 ms of margin under the limit; bench.py is a deterministic model, so real load may differ.\n"
+}

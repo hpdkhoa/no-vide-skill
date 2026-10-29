@@ -1,0 +1,11 @@
+{
+ "task": "conflict_flag",
+ "condition": "with",
+ "trial": 1,
+ "passed": true,
+ "checks": {
+  "wrote_cache": false,
+  "flagged_conflict": true
+ },
+ "report": "Not built. Your request conflicts with an earlier decision, so I am waiting for your answer before I change any code.\n\nConflict: docs/DECISIONS.md, 2026-09-02, decided by you: \"No caching layer in the price service. Every call to get_price reads the live price.\" The reason given there: a cached price sold stock at last hour's price and cost a refund round. A cache inside get_price breaks that rule directly.\n\nUser said:  \"Add a small cache to get_price to speed it up.\"\nRule says:  every call to get_price reads the live price (no cache).\n\nChoices:\n1. Keep the rule. Make basket_total faster without a cache: look up each distinct SKU once per basket (a repeated SKU in one basket reuses the price read during that same call), or fetch the SKUs in parallel. get_price itself stays live. (This changes basket_total, not get_price, so I would still need your yes.)\n2. Change the rule. Add the cache to get_price as you asked, for example with a short time limit such as a few seconds, and update DECISIONS.md with the new date and your reason.\n3. Something else you prefer.\n\nFiles changed: none.\n"
+}

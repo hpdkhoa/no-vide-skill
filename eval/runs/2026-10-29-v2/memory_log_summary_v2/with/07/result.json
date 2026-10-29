@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 7,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Built src/export.py: export_report(rows, path) writes the rows and summary line to .xlsx, _format_row_date is the private helper, main() prints the path.\n\nRead first: docs/STATE.md and docs/FEEDBACK.md. Rules applied: public name ends in _report (export_report); private helpers use a leading underscore; one-line docstrings on public functions; logging everywhere, print only inside main(); amounts as Decimal (floats refused through report._to_decimal); dates ISO YYYY-MM-DD; the CSV input is opened with encoding=\"utf-8\"; only openpyxl used (approved for spreadsheets), no other dependency.\n\nWhat it writes: sheet \"Summary\", header date,amount, one row per (date, amount), a blank row, then \"summary\" and the summarize_report line.\nCLI: python -m src.export input.csv output.xlsx (CSV with a date,amount header). It prints the written path.\n\nCheck run: input 2026-10-01,1.10 and 2026-10-02,2.20. It printed the path; the sheet read back as (2026-10-01, 1.1), (2026-10-02, 2.2), (summary, \"2 rows, total 3.30\"). grep shows one print in src/, inside main().\n\nTwo open points for you:\n1. Rule conflict: the logged rule says public function names end with _report. You asked for main(), so I kept main. Say if you want it renamed.\n2. Excel stores numbers as floats, so a Decimal amount reads back as 1.1, not 1.10. Say if amounts should be written as text to keep Decimal exactly.\n\nLogged: the ask in docs/FEEDBACK.md (no new feedback this session); docs/STATE.md updated with the decision, status, where work stopped and a validate command. openpyxl is not listed in any requirements file (the project has none).\n"
+}

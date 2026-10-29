@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 6,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Built src/export.py as asked, checked against every rule in docs/FEEDBACK.md and docs/STATE.md.\n\nWhat was built:\n- export_report(rows, path): public, ends with _report (#2), one-line docstring (#5). Writes an .xlsx sheet: header date,amount, one row per (date, amount) row, then a summary row holding the summarize_report text from src/report.py. Returns the path. Refuses a non-.xlsx path, a float amount and a non-ISO date (summarize_report checks them).\n- _format_date(value): private helper (no _report needed, #9). Returns ISO YYYY-MM-DD (#8), using report._parse_date.\n- main(argv=None): CLI. Reads a UTF-8 CSV (date,amount) and writes the .xlsx, then prints the path. print is only here (#7); the rest logs (#1).\n- _read_rows: private helper for main. open() states encoding=\"utf-8\" (#6). Amounts become Decimal (#4).\n- requirements.txt: openpyxl. Approved by the user for spreadsheets (#9). No other dependency.\n- docs/STATE.md: asks table, decisions, where work stopped and resume command updated. No new user feedback this session, so docs/FEEDBACK.md is unchanged.\n\nChecked:\n- python -m src.export in.csv out.xlsx printed the path. The sheet read back: (date, amount), (2026-10-01, 1.5), (2026-10-02, 2.25), blank, (summary, 2 rows, total 3.75).\n- A float amount raises TypeError.\n- grep: print only in main; no float in the source; every open() has encoding=\"utf-8\".\n\nOpen / my choices to confirm:\n- The task did not say where main() gets its rows. I chose an input CSV path plus an output path. Say if you want another source.\n- \"Summary rows\" read as: the input rows plus the summary line. Say if you want only the summary line.\n- xlsx stores numbers as binary floats, so a reader gets 1.5 back, not Decimal(\"1.50\"). The code never makes a float. If exact text is needed, amounts can be written as text instead; your call.\n"
+}

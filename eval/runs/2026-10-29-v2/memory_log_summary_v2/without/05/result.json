@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 5,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Added src/export.py, using openpyxl as the owner approved (rule 9).\n\nWhat was built:\n- export_report(rows, path): public, the name ends with _report, and it has a one-line docstring. It writes a \"Summary\" sheet to an .xlsx file: a date,amount header, one line per row, then a \"summary\" line with the summarize_report text. It returns the path. Paths that do not end in .xlsx are refused.\n- _format_date(value): private helper. It returns the row's date as ISO YYYY-MM-DD text and reuses _parse_date from report.py, so bad dates are refused.\n- main(argv=None): the CLI. Run it as python -m src.export input.csv output.xlsx. It reads a CSV (date,amount header) with open(..., encoding=\"utf-8\"), runs the export and prints the path it wrote. print appears only here (rule 7). Everything else logs.\n- Amounts pass through report._parse_amount, so they are Decimal and floats are refused (rule 4).\n- requirements.txt lists openpyxl. docs/PROJECT_RULES.md \"State\" is updated.\n\nChecked: an export of 2 rows read back as [date, amount] lines plus \"2 rows, total 19.50\". A float amount raised TypeError. A non-ISO date raised ValueError.\n\nStill open: .xlsx stores numbers as floating point, so Excel reads the amount cell back as 12.5, not Decimal(\"12.50\"). The exact Decimal total is kept in the summary text. If the amount cells must stay exact, they could be written as text. That is the owner's decision.\n"
+}

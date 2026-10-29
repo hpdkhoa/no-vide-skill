@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "with",
+ "trial": 3,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Done: src/export.py added; rules read from docs/FEEDBACK.md and docs/STATE.md first, all checked.\n\nBuilt:\n- export_report(rows, path): public, name ends in _report, one-line docstring. Writes an .xlsx (openpyxl, approved in\n  entry 9) with sheet \"Summary\": header date, amount; one line per row; a blank line; then the summarize_report line.\n- _format_date(value): private helper, returns ISO YYYY-MM-DD (uses report._to_date).\n- main(argv=None): CLI, python export.py INPUT.csv OUTPUT.xlsx; prints the path it wrote (print only in main, entry 7).\n  Input CSV is opened with encoding=\"utf-8\" (entry 6). Logging elsewhere.\n\nChecked: sample run wrote the file; read back: 2026-10-01 10.50, 2026-10-03 2.25, summary\n\"2 rows, total 12.75, from 2026-10-01 to 2026-10-03\". A float amount raises TypeError. Wrong args print usage, exit 2.\n\nOne choice for the user to confirm: amounts are written as exact Decimal text cells (\"10.50\"), because an .xlsx\nnumber cell is stored as a binary float, and the rule says money is Decimal, never float (entry 4). If you want\nnumeric cells instead, say so and I will change it.\n\nNot done: no tests (not asked); no requirements file (none exists). No new feedback this session, so FEEDBACK.md is\nunchanged. STATE.md updated (asks, decision, where work stopped).\n"
+}

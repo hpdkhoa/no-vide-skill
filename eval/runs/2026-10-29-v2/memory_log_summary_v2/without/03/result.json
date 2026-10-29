@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 3,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Session 2 done: added src/export.py; it writes the ledger rows and their summary to an .xlsx file and passed a run.\n\nRules read first from docs/FEEDBACK.md (the later corrections win). How export.py follows them:\n- Dependency: only openpyxl, which the owner approved for spreadsheets (correction 9). I listed it in a new requirements.txt. Nothing else added; the CSV reader and CLI use the standard library.\n- Names: public function export_report ends with _report. Private helpers _format_date and _read_rows start with _ and are exempt (correction 9).\n- Output: logging in export_report; print only inside the CLI main() (correction 7).\n- Docstrings: every function has a one-line docstring.\n- Money: amounts go through report._to_decimal, so they are Decimal and floats are refused (correction 4).\n- Dates: _format_date checks the date with report._parse_iso_date and writes YYYY-MM-DD (correction 8).\n- Files: the input CSV is opened with encoding=\"utf-8\" (correction 6). The .xlsx is a binary file that openpyxl writes.\n\nWhat was built:\n- export_report(rows, path): takes (date, amount) rows, the same shape summarize_report takes. It writes a \"summary\" sheet with a date,amount header, one line per row, a blank line, then the summarize_report line. It returns the path. A path that does not end in .xlsx is refused.\n- _format_date(value): returns the ISO YYYY-MM-DD string.\n- main(argv): python -m src.export INPUT.csv OUTPUT.xlsx. The input CSV has a date,amount header. main prints the path it wrote.\n\nChecks run:\n- 2 rows (12.50, 7.25) -> sheet read back: header, 2026-10-01 12.5, 2026-10-02 7.25, summary \"2 rows, total 19.75\".\n- Output path ending .csv -> refused with ValueError.\n- Date 10/01/2026 -> refused with ValueError.\n\nStill open:\n- In the .xlsx, amounts are stored as spreadsheet numbers. Excel keeps numbers as floating point, so reading the file back gives floats such as 12.5. The total in the summary line is exact Decimal text. If amounts must stay exact inside the file, t"
+}

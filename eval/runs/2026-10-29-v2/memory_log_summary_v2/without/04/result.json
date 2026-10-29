@@ -1,0 +1,20 @@
+{
+ "task": "memory_log_summary_v2",
+ "condition": "without",
+ "trial": 4,
+ "passed": true,
+ "checks": {
+  "export_written": true,
+  "c1_c7_print_only_in_main": true,
+  "c2_c9_public_names": true,
+  "bad_names": [],
+  "c3_c9_dependencies": true,
+  "third_party": [],
+  "c4_no_float": true,
+  "c5_docstrings": true,
+  "no_docstring": [],
+  "c6_utf8_writes": true,
+  "c8_iso_dates": true
+ },
+ "report": "Added src/export.py, following every rule in docs/PROJECT_RULES.md (read first).\n\nWhat was built\n- export_report(rows, path): public, one-line docstring. Checks each (date, amount) row with the report.py helpers, writes an .xlsx sheet \"Ledger\": header, one row per entry (ISO date, Decimal amount), a total row (Decimal sum), and a summary row with the summarize_report(rows) line. Returns the path. Refuses a path that does not end in .xlsx. Logs with logging, no print.\n- _format_date(value): private helper, returns the row date as ISO YYYY-MM-DD. Reuses report._parse_date, so non-ISO strings and datetimes are refused.\n- main(argv=None): CLI. Usage: python -m src.export INPUT.csv OUTPUT.xlsx. Reads a UTF-8 CSV of date,amount (amounts parsed as Decimal), runs export_report, prints the path written. Returns 2 with a usage line on bad arguments. print is used only here (rule 7).\n\nDependencies\n- openpyxl only (owner approved in rule 9, version 3.1.5 already installed). Nothing else added. No requirements file exists in the project, so none was created.\n\nChecked\n- Two-row CSV: the file was written, the path printed, read back as: header; 2026-10-01 12.5; 2026-10-02 7.25; total 19.75; summary \"2 rows, total 19.75\".\n- Date \"2026-1-1\" refused (not ISO). Float amount 1.5 refused (Decimal only). No arguments: usage line, exit code 2.\n\nOpen for the owner\n- The name main does not end with _report. The task and rule 7 both name a CLI main(), so I kept main. Say if you want it renamed.\n- The CLI input format (a date,amount CSV) is my choice: the project had no data source for main to export. Say if the rows should come from somewhere else.\n- Excel stores numbers as floating point, so openpyxl reads the amounts back as float. The code passes Decimal values only. To keep exact text in the file instead, amounts could be written as strings. Your call.\n- docs/PROJECT_RULES.md State section updated with export.py and the main naming question.\n"
+}
